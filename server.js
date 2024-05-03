@@ -1,10 +1,14 @@
 require("dotenv").config();
-const ApiResponse = require("./apiResponse").default;
+const ApiResponse = require("./apiResponse");
+const AdminUser = require("./apiAdminUser");
+//import { ApiResponse, AdminUser } from "./apiResponse";
+// const ApiResponse = require("./apiResponse").ApiResponse;
+// const AdminUser = require("./apiAdminUser").AdminUser;
+const jwt = require("jsonwebtoken");
 
 const express = require("express");
-const app = express();
 const cors = require("cors");
-
+const app = express();
 const port = process.env.PORT || 3000;
 
 const mysql = require("mysql2");
@@ -30,6 +34,57 @@ app.get("/admin_users", (req, res) => {
       res.json(successResponse);
     }
   });
+});
+
+app.post("/auth/login", (req, res) => {
+  const { body } = req;
+  const { email } = body;
+  const { password } = body;
+  pool.query(
+    "SELECT * FROM admin_users WHERE email = ?",
+    email,
+    function (err, results) {
+      if (err) {
+        console.error(err);
+        const errorResponse = ApiResponse.error(500, "Internal Server Error");
+
+        res.status(500).json(errorResponse);
+      } else {
+        const successResponse = ApiResponse.success(results);
+        const adminUser = AdminUser.fromUserData(successResponse.data[0]);
+
+        if (password === adminUser.password_hash) {
+          console.log("Password is match");
+          //if user log in success, generate a JWT token for the user with a secret key
+          jwt.sign(
+            { adminUser },
+            "privatekey",
+            { expiresIn: "1h" },
+            (err, token) => {
+              if (err) {
+                console.log(err);
+              }
+              console.log(token);
+              const successResponse = ApiResponse.success(token);
+              res.send(successResponse);
+            }
+          );
+        } else {
+          const errorResponse = ApiResponse.error(
+            401,
+            "ERROR: Could not log in"
+          );
+          res.send(errorResponse);
+        }
+        // const successResponse = ApiResponse.success(results);
+        // console.log(successResponse);
+        // res.json(successResponse);
+      }
+    }
+  );
+  // results = "ABC Response";
+  // const successResponse = ApiResponse.success(results);
+  // res.json(successResponse);
 });
 
 app.listen(port, () => {
