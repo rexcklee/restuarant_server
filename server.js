@@ -1,8 +1,10 @@
 require("dotenv").config();
+const ApiResponse = require("./apiResponse").default;
 
 const express = require("express");
-const cors = require("cors");
 const app = express();
+const cors = require("cors");
+
 const port = process.env.PORT || 3000;
 
 const mysql = require("mysql2");
@@ -15,16 +17,17 @@ const pool = mysql.createPool({
 });
 
 app.use(cors());
-
 app.use(express.json());
 
 app.get("/admin_users", (req, res) => {
   pool.query("SELECT * FROM admin_users", function (err, results) {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      const errorResponse = ApiResponse.error(500, "Internal Server Error");
+      res.status(500).json(errorResponse);
     } else {
-      res.json(results);
+      const successResponse = ApiResponse.success(results);
+      res.json(successResponse);
     }
   });
 });
