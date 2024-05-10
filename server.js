@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const express = require("express");
 const cors = require("cors");
@@ -14,6 +15,7 @@ app.use(express.json());
 // Mounting routes
 app.use("/auth", authRoutes);
 app.use("/admin_users", userRoutes);
+app.use("/products", productRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
