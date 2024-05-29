@@ -43,7 +43,11 @@ router.post("/login", (req, res) => {
                     if (err) {
                       console.log(err);
                     }
-                    const successResponse = ApiResponse.success(token);
+                    //const successResponse = ApiResponse.success(token);
+                    const successResponse = ApiResponse.success({
+                      token: token,
+                      currentUser: adminUser,
+                    });
                     console.log(token.expiresIn);
                     console.log(token);
                     res.send(successResponse);
