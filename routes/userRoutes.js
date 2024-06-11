@@ -115,7 +115,7 @@ router.post("/update_user/", checkToken, (req, res) => {
   });
 });
 
-// Update admin user
+// Delete admin user
 router.post("/delete_user/", checkToken, (req, res) => {
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {

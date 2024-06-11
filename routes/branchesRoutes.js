@@ -9,44 +9,29 @@ const checkToken = require("../middleware");
 const ApiResponse = require("../models/apiResponse");
 
 // Get All product categories
-// router.get("/", checkToken, (req, res) => {
-//   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
-//     if (err) {
-//       //If error send Forbidden (403)
-//       console.log("ERROR: Could not connect to the protected route");
-//       res.sendStatus(403);
-//     } else {
-//       pool.query("SELECT * FROM product_categories", function (err, results) {
-//         if (err) {
-//           console.error(err);
-//           const errorResponse = ApiResponse.error(500, "Internal Server Error");
-//           res.status(500).json(errorResponse);
-//         } else {
-//           const successResponse = ApiResponse.success(results);
-//           res.json(successResponse);
-//         }
-//       });
-//     }
-//   });
-// });
-router.get("/", (req, res) => {
-  pool.query(
-    "SELECT * FROM product_categories ORDER BY category_sort",
-    function (err, results) {
-      if (err) {
-        console.error(err);
-        const errorResponse = ApiResponse.error(500, "Internal Server Error");
-        res.status(500).json(errorResponse);
-      } else {
-        const successResponse = ApiResponse.success(results);
-        res.json(successResponse);
-      }
+router.get("/", checkToken, (req, res) => {
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      pool.query("SELECT * FROM branches", function (err, results) {
+        if (err) {
+          console.error(err);
+          const errorResponse = ApiResponse.error(500, "Internal Server Error");
+          res.status(500).json(errorResponse);
+        } else {
+          const successResponse = ApiResponse.success(results);
+          res.json(successResponse);
+        }
+      });
     }
-  );
+  });
 });
 
-// Add product category
-router.post("/add_product_category/", checkToken, (req, res) => {
+// Add branch
+router.post("/add_branch/", checkToken, (req, res) => {
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
@@ -54,8 +39,18 @@ router.post("/add_product_category/", checkToken, (req, res) => {
       res.sendStatus(403);
     } else {
       pool.query(
-        "INSERT INTO `product_categories` (`category_name`) VALUES (?)",
-        [req.body.category_name],
+        "INSERT INTO `branches` (`branch_name`, `branch_address`, `branch_phone`,`branch_email`,`branch_facebook_link`,`branch_ig_link`,`branch_x_link`,`branch_reserve_link`,`branch_opening_hours`) VALUES (?,?,?,?,?,?,?,?,?)",
+        [
+          req.body.branch_name,
+          req.body.branch_address,
+          req.body.branch_phone,
+          req.body.branch_email,
+          req.body.branch_facebook_link,
+          req.body.branch_ig_link,
+          req.body.branch_x_link,
+          req.body.branch_reserve_link,
+          req.body.branch_opening_hours,
+        ],
         function (err, results) {
           if (err) {
             console.error(err);
@@ -74,8 +69,8 @@ router.post("/add_product_category/", checkToken, (req, res) => {
   });
 });
 
-// Update product category
-router.post("/update_product_category/", checkToken, (req, res) => {
+// Update branch
+router.post("/update_branch/", checkToken, (req, res) => {
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
@@ -83,8 +78,19 @@ router.post("/update_product_category/", checkToken, (req, res) => {
       res.sendStatus(403);
     } else {
       pool.query(
-        "UPDATE `product_categories` SET `category_name` = ?, `category_sort` = ? WHERE `category_id` = ?",
-        [req.body.category_name, req.body.category_sort, req.body.category_id],
+        "UPDATE `branches` SET `branch_name` = ? , `branch_address` = ?, `branch_phone` = ?, `branch_email` = ?, `branch_facebook_link` = ?, `branch_ig_link` = ?, `branch_x_link` = ?, `branch_reserve_link` = ?, `branch_opening_hours` = ? WHERE `branch_id` = ?",
+        [
+          req.body.branch_name,
+          req.body.branch_address,
+          req.body.branch_phone,
+          req.body.branch_email,
+          req.body.branch_facebook_link,
+          req.body.branch_ig_link,
+          req.body.branch_x_link,
+          req.body.branch_reserve_link,
+          req.body.branch_opening_hours,
+          req.body.branch_id,
+        ],
         function (err, results) {
           if (err) {
             console.error(err);
@@ -103,8 +109,8 @@ router.post("/update_product_category/", checkToken, (req, res) => {
   });
 });
 
-// Delete product category
-router.post("/delete_product_category/", checkToken, (req, res) => {
+// Delete branch
+router.post("/delete_branch/", checkToken, (req, res) => {
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
@@ -112,8 +118,8 @@ router.post("/delete_product_category/", checkToken, (req, res) => {
       res.sendStatus(403);
     } else {
       pool.query(
-        "DELETE FROM `product_categories` WHERE `category_id` = ?",
-        [req.body.category_id],
+        "DELETE FROM `branches` WHERE `branch_id` = ?",
+        [req.body.branch_id],
         function (err, results) {
           if (err) {
             console.error(err);
