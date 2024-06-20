@@ -16,6 +16,7 @@ const createOrderItemsTable = () => {
     CREATE TABLE order_items (
         order_item_id INT PRIMARY KEY AUTO_INCREMENT,
         order_id INT NOT NULL,
+        order_number VARCHAR(30) NOT NULL,
         product_id INT NOT NULL,
         quantity INT NOT NULL,
         unit_price DECIMAL(10, 2) NOT NULL,
@@ -36,7 +37,6 @@ const createOrdersTable = () => {
   const sql = `
     CREATE TABLE orders (
         order_id INT PRIMARY KEY AUTO_INCREMENT,
-        order_number VARCHAR(20) UNIQUE NOT NULL,
         customer_id INT NOT NULL,
         order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
         total_amount DECIMAL(10, 2) NOT NULL,

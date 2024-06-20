@@ -8,6 +8,7 @@ const googleRoutes = require("./routes/googleRoutes");
 const branchesRoutes = require("./routes/branchesRoutes");
 const customerAuthRoutes = require("./routes/customerAuthRoutes");
 const customerRoutes = require("./routes/customerRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const express = require("express");
 const cors = require("cors");
@@ -26,6 +27,7 @@ app.use("/uploadGoogle", googleRoutes);
 app.use("/branches", branchesRoutes);
 app.use("/customer_auth", customerAuthRoutes);
 app.use("/customers", customerRoutes);
+app.use("/orders", orderRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
