@@ -15,7 +15,15 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+// Allow CORS from your Vercel domain
+const corsOptions = {
+  origin: "https://https://restaurant-admin-nu.vercel.app/", // replace with your Vercel domain
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+//app.use(cors());
 app.use(express.json());
 
 // Mounting routes
