@@ -9,17 +9,16 @@ const jwt = require("jsonwebtoken");
 
 router.post("/login", (req, res) => {
   const { body } = req;
-  const { email } = body;
-  const { password } = body;
+  // const { email } = body;
+  // const { password } = body;
+  const { email, password } = body;
 
   pool.query(
     "SELECT * FROM admin_users WHERE email = ?",
     email,
     function (err, results) {
       if (err) {
-        console.error(err);
         const errorResponse = ApiResponse.error(500, "Internal Server Error");
-
         res.status(500).json(errorResponse);
       } else {
         const successResponse = ApiResponse.success(results);
@@ -33,8 +32,6 @@ router.post("/login", (req, res) => {
             .compare(password, adminUser.password_hash)
             .then((bcryptres) => {
               if (bcryptres) {
-                // if (password === adminUser.password_hash) {
-                console.log(bcryptres);
                 jwt.sign(
                   { adminUser },
                   process.env.PRIVATE_KEY,
@@ -43,13 +40,10 @@ router.post("/login", (req, res) => {
                     if (err) {
                       console.log(err);
                     }
-                    //const successResponse = ApiResponse.success(token);
                     const successResponse = ApiResponse.success({
                       token: token,
                       currentUser: adminUser,
                     });
-                    console.log(token.expiresIn);
-                    console.log(token);
                     res.send(successResponse);
                     const currentDate = new Date();
                     pool.query(

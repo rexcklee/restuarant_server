@@ -9,26 +9,6 @@ const checkToken = require("../middleware");
 const ApiResponse = require("../models/apiResponse");
 
 // Get All product categories
-// router.get("/", checkToken, (req, res) => {
-//   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
-//     if (err) {
-//       //If error send Forbidden (403)
-//       console.log("ERROR: Could not connect to the protected route");
-//       res.sendStatus(403);
-//     } else {
-//       pool.query("SELECT * FROM product_categories", function (err, results) {
-//         if (err) {
-//           console.error(err);
-//           const errorResponse = ApiResponse.error(500, "Internal Server Error");
-//           res.status(500).json(errorResponse);
-//         } else {
-//           const successResponse = ApiResponse.success(results);
-//           res.json(successResponse);
-//         }
-//       });
-//     }
-//   });
-// });
 router.get("/", (req, res) => {
   pool.query(
     "SELECT * FROM product_categories ORDER BY category_sort",
@@ -63,7 +43,7 @@ router.post("/add_product_category/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
