@@ -21,12 +21,15 @@ router.post("/login", (req, res) => {
         const errorResponse = ApiResponse.error(500, "Internal Server Error");
         res.status(500).json(errorResponse);
       } else {
-        const successResponse = ApiResponse.success(results);
+        //const successResponse = ApiResponse.success(results);
         if (
-          Array.isArray(successResponse.data) &&
-          successResponse.data.length > 0
+          // Array.isArray(successResponse.data) &&
+          // successResponse.data.length > 0
+          Array.isArray(results) &&
+          results.length > 0
         ) {
-          const adminUser = AdminUser.fromUserData(successResponse.data[0]);
+          //const adminUser = AdminUser.fromUserData(successResponse.data[0]);
+          const adminUser = AdminUser.fromUserData(results[0]);
 
           bcrypt
             .compare(password, adminUser.password_hash)

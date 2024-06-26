@@ -9,8 +9,7 @@ const jwt = require("jsonwebtoken");
 
 router.post("/login", (req, res) => {
   const { body } = req;
-  const { email } = body;
-  const { password } = body;
+  const { email, password } = body;
 
   pool.query(
     "SELECT * FROM customers WHERE email = ?",
@@ -19,24 +18,21 @@ router.post("/login", (req, res) => {
       if (err) {
         console.error(err);
         const errorResponse = ApiResponse.error(500, "Internal Server Error");
-
-        res.status(500).json(errorResponse);
+        res.send(errorResponse);
       } else {
-        console.log("From customers table:", results);
-        const successResponse = ApiResponse.success(results);
+        //const successResponse = ApiResponse.success(results);
         if (
-          Array.isArray(successResponse.data) &&
-          successResponse.data.length > 0
+          //   Array.isArray(successResponse.data) &&
+          //   successResponse.data.length > 0
+          Array.isArray(results) &&
+          results.length > 0
         ) {
-          const customer = Customer.fromCustomerData(successResponse.data[0]);
-          console.log("Password:", password);
-          console.log("Customer table Password:", customer.password);
+          //const customer = Customer.fromCustomerData(successResponse.data[0]);
+          const customer = Customer.fromCustomerData(results[0]);
           bcrypt
             .compare(password, customer.password)
             .then((bcryptres) => {
               if (bcryptres) {
-                // if (password === adminUser.password_hash) {
-                console.log(bcryptres);
                 jwt.sign(
                   { customer },
                   process.env.PRIVATE_KEY,
@@ -45,13 +41,10 @@ router.post("/login", (req, res) => {
                     if (err) {
                       console.log(err);
                     }
-                    //const successResponse = ApiResponse.success(token);
                     const successResponse = ApiResponse.success({
                       token: token,
                       currentCustomer: customer,
                     });
-                    console.log(token.expiresIn);
-                    console.log(token);
                     res.send(successResponse);
                     const currentDate = new Date();
                     pool.query(

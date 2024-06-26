@@ -50,7 +50,8 @@ router.post("/", upload.array("files", 12), async (req, res) => {
     }
   } catch (error) {
     console.error("Error uploading file:", error);
-    res.status(500).send("Error uploading file.");
+    const errorResponse = ApiResponse.error(500, "Error uploading file.");
+    res.send(errorResponse);
   }
 });
 
@@ -68,7 +69,8 @@ router.post("/delete_image/", checkToken, async (req, res) => {
     res.json(successResponse);
   } catch (error) {
     console.error("Error deleting file:", error);
-    res.status(500).send("Error deleting file.");
+    const errorResponse = ApiResponse.error(500, "Error deleting file.");
+    res.send(errorResponse);
   }
 });
 

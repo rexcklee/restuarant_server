@@ -9,33 +9,6 @@ const checkToken = require("../middleware");
 const ApiResponse = require("../models/apiResponse");
 
 // Get All products
-// router.get("/", checkToken, (req, res) => {
-//   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
-//     if (err) {
-//       //If error send Forbidden (403)
-//       console.log("ERROR: Could not connect to the protected route");
-//       res.sendStatus(403);
-//     } else {
-//       //pool.query("SELECT * FROM products", function (err, results) {
-//       pool.query(
-//         "SELECT * FROM products p JOIN product_categories c WHERE p.category_id=c.category_id",
-//         function (err, results) {
-//           if (err) {
-//             console.error(err);
-//             const errorResponse = ApiResponse.error(
-//               500,
-//               "Internal Server Error"
-//             );
-//             res.status(500).json(errorResponse);
-//           } else {
-//             const successResponse = ApiResponse.success(results);
-//             res.json(successResponse);
-//           }
-//         }
-//       );
-//     }
-//   });
-// });
 router.get("/", (req, res) => {
   //pool.query("SELECT * FROM products", function (err, results) {
   pool.query(
@@ -44,7 +17,7 @@ router.get("/", (req, res) => {
       if (err) {
         console.error(err);
         const errorResponse = ApiResponse.error(500, "Internal Server Error");
-        res.status(500).json(errorResponse);
+        res.send(errorResponse);
       } else {
         const successResponse = ApiResponse.success(results);
         res.json(successResponse);
@@ -55,6 +28,15 @@ router.get("/", (req, res) => {
 
 // Add product
 router.post("/add_product/", checkToken, (req, res) => {
+  const { body } = req;
+  const {
+    product_name,
+    product_description,
+    image_id,
+    product_price,
+    category_id,
+  } = body;
+
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
@@ -64,21 +46,20 @@ router.post("/add_product/", checkToken, (req, res) => {
       pool.query(
         "INSERT INTO `products` (`product_name`, `product_description`, `image_id`, `product_price`, `category_id`) VALUES (?, ?, ?, ?, ?)",
         [
-          req.body.product_name,
-          req.body.product_description,
-          req.body.image_id,
-          req.body.product_price,
-          req.body.category_id,
+          product_name,
+          product_description,
+          image_id,
+          product_price,
+          category_id,
         ],
         function (err, results) {
-          //pool.query("SELECT * FROM admin_users", function (err, results) {
           if (err) {
             console.error(err);
             const errorResponse = ApiResponse.error(
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
@@ -113,7 +94,7 @@ router.post("/update_product/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
@@ -142,7 +123,7 @@ router.post("/update_product_image/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
@@ -171,7 +152,7 @@ router.post("/delete_product/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
