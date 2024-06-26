@@ -56,6 +56,8 @@ router.post("/add_product_category/", checkToken, (req, res) => {
 
 // Update product category
 router.post("/update_product_category/", checkToken, (req, res) => {
+  const { body } = req;
+  const { category_name, category_sort, category_id } = body;
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
@@ -64,7 +66,8 @@ router.post("/update_product_category/", checkToken, (req, res) => {
     } else {
       pool.query(
         "UPDATE `product_categories` SET `category_name` = ?, `category_sort` = ? WHERE `category_id` = ?",
-        [req.body.category_name, req.body.category_sort, req.body.category_id],
+        //[req.body.category_name, req.body.category_sort, req.body.category_id],
+        [category_name, category_sort, category_id],
         function (err, results) {
           if (err) {
             console.error(err);
@@ -72,7 +75,7 @@ router.post("/update_product_category/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
@@ -101,7 +104,7 @@ router.post("/delete_product_category/", checkToken, (req, res) => {
               500,
               "Internal Server Error"
             );
-            res.status(500).json(errorResponse);
+            res.send(errorResponse);
           } else {
             const successResponse = ApiResponse.success(results);
             res.json(successResponse);
