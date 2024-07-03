@@ -13,6 +13,7 @@ const branchesRoutes = require("./routes/branchesRoutes");
 const customerAuthRoutes = require("./routes/customerAuthRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const newsRoutes = require("./routes/newsRoutes");
 
 const express = require("express");
 const cors = require("cors");
@@ -20,18 +21,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Path to SSL certificates
-const certPath = "/etc/letsencrypt/live/rexlee.space/";
+//const certPath = "/etc/letsencrypt/live/rexlee.space/";
 
-// Allow CORS from your Vercel domain
-// const corsOptions = {
-//   origin: "https://https://restaurant-admin-nu.vercel.app/", // replace with your Vercel domain
-//   optionsSuccessStatus: 200,
+// const options = {
+//   key: fs.readFileSync(path.join(certPath, "privkey.pem")),
+//   cert: fs.readFileSync(path.join(certPath, "cert.pem")),
+//   ca: fs.readFileSync(path.join(certPath, "chain.pem")),
 // };
-const options = {
-  key: fs.readFileSync(path.join(certPath, "privkey.pem")),
-  cert: fs.readFileSync(path.join(certPath, "cert.pem")),
-  ca: fs.readFileSync(path.join(certPath, "chain.pem")),
-};
 
 //app.use(cors(corsOptions));
 
@@ -48,12 +44,13 @@ app.use("/branches", branchesRoutes);
 app.use("/customer_auth", customerAuthRoutes);
 app.use("/customers", customerRoutes);
 app.use("/orders", orderRoutes);
+app.use("/news", newsRoutes);
 
 // Create an HTTPS server
-https.createServer(options, app).listen(444, () => {
-  console.log("HTTPS server running on port 444");
-});
-
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
+// https.createServer(options, app).listen(444, () => {
+//   console.log("HTTPS server running on port 444");
 // });
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
