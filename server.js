@@ -29,9 +29,9 @@ const options = {
   ca: fs.readFileSync(path.join(certPath, "chain.pem")),
 };
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 // Mounting routes
