@@ -38,7 +38,7 @@ router.post("/add_homeSection/", checkToken, (req, res) => {
       res.sendStatus(403);
     } else {
       pool.query(
-        "INSERT INTO `news` (`homeSection_title`, `homeSection_content`, `image_id`, `isshow`, `sort`) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO `homeSections` (`homeSection_title`, `homeSection_content`, `image_id`, `isshow`, `sort`) VALUES (?, ?, ?, ?, ?)",
         [homeSection_title, homeSection_content, image_id, isshow, sort],
         function (err, results) {
           if (err) {
