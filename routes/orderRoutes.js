@@ -74,12 +74,6 @@ router.get("/order_table_columns/", (req, res) => {
 
 // Add order
 router.post("/create_order/", (req, res) => {
-  //   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
-  //     if (err) {
-  //       //If error send Forbidden (403)
-  //       console.log("ERROR: Could not connect to the protected route");
-  //       res.sendStatus(403);
-  //     } else {
   let orderNumber = generateOrderNumber();
   console.log(orderNumber);
   pool.query(

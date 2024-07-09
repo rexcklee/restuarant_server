@@ -14,6 +14,7 @@ const customerAuthRoutes = require("./routes/customerAuthRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const homeSectionRoutes = require("./routes/homeSectionRoutes");
 
 const express = require("express");
 const cors = require("cors");
@@ -45,6 +46,7 @@ app.use("/customer_auth", customerAuthRoutes);
 app.use("/customers", customerRoutes);
 app.use("/orders", orderRoutes);
 app.use("/news", newsRoutes);
+app.use("/homeSections", homeSectionRoutes);
 
 //Create an HTTPS server
 https.createServer(options, app).listen(444, () => {
