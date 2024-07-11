@@ -8,8 +8,8 @@ const jwt = require("jsonwebtoken");
 const checkToken = require("../middleware");
 const ApiResponse = require("../models/apiResponse");
 
-// Get All product categories
-router.get("/", checkToken, (req, res) => {
+// Get All branches
+router.get("/", (req, res) => {
   jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
     if (err) {
       //If error send Forbidden (403)
