@@ -68,7 +68,75 @@ router.post("/register_customer/", (req, res) => {
 });
 
 // Update customer
+router.post("/update_customer/", checkToken, (req, res) => {
+  const { body } = req;
+  const { first_name, last_name, phone_number, email, password, address } =
+    body;
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      pool.query(
+        "UPDATE `customers` SET `first_name` = ?, `last_name` = ?, `phone_number` = ?, `email` = ?, `password` = ?, `address` = ? WHERE `customer_id` = ?",
+        [
+          first_name,
+          last_name,
+          phone_number,
+          email,
+          password,
+          address,
+          customer_id,
+        ],
+        function (err, results) {
+          //pool.query("SELECT * FROM admin_users", function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(
+              500,
+              "Internal Server Error"
+            );
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
+    }
+  });
+});
 
 // Delete customer
+router.post("/delete_customer/", checkToken, (req, res) => {
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      console.log(req.body.customer_id);
+      pool.query(
+        "DELETE FROM `customers` WHERE `customer_id` = ?",
+        [req.body.admin_id],
+        function (err, results) {
+          //pool.query("SELECT * FROM admin_users", function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(
+              500,
+              "Internal Server Error"
+            );
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
+    }
+  });
+});
 
 module.exports = router;
