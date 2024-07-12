@@ -97,7 +97,6 @@ router.post("/update_customer/", checkToken, (req, res) => {
           customer_id,
         ],
         function (err, results) {
-          //pool.query("SELECT * FROM admin_users", function (err, results) {
           if (err) {
             console.error(err);
             const errorResponse = ApiResponse.error(
@@ -128,7 +127,6 @@ router.post("/delete_customer/", checkToken, (req, res) => {
         "DELETE FROM `customers` WHERE `customer_id` = ?",
         [req.body.customer_id],
         function (err, results) {
-          //pool.query("SELECT * FROM admin_users", function (err, results) {
           if (err) {
             console.error(err);
             const errorResponse = ApiResponse.error(

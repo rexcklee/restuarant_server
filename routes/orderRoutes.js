@@ -28,16 +28,19 @@ function generateOrderNumber() {
 }
 
 router.get("/", (req, res) => {
-  pool.query("SELECT * FROM orders", function (err, results) {
-    if (err) {
-      console.error(err);
-      const errorResponse = ApiResponse.error(500, "Internal Server Error");
-      res.status(500).json(errorResponse);
-    } else {
-      const successResponse = ApiResponse.success(results);
-      res.json(successResponse);
+  pool.query(
+    "SELECT * FROM orders o JOIN customers c ON o.customer_id = c.customer_id",
+    function (err, results) {
+      if (err) {
+        console.error(err);
+        const errorResponse = ApiResponse.error(500, "Internal Server Error");
+        res.status(500).json(errorResponse);
+      } else {
+        const successResponse = ApiResponse.success(results);
+        res.json(successResponse);
+      }
     }
-  });
+  );
 });
 
 router.get("/order_items/", (req, res) => {
