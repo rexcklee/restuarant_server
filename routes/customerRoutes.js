@@ -126,7 +126,7 @@ router.post("/delete_customer/", checkToken, (req, res) => {
       console.log(req.body.customer_id);
       pool.query(
         "DELETE FROM `customers` WHERE `customer_id` = ?",
-        [req.body.admin_id],
+        [req.body.customer_id],
         function (err, results) {
           //pool.query("SELECT * FROM admin_users", function (err, results) {
           if (err) {
