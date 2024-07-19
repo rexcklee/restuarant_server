@@ -27,52 +27,126 @@ function generateOrderNumber() {
   ].join("-");
 }
 
-router.get("/", (req, res) => {
-  pool.query(
-    "SELECT * FROM orders o JOIN customers c ON o.customer_id = c.customer_id",
-    function (err, results) {
-      if (err) {
-        console.error(err);
-        const errorResponse = ApiResponse.error(500, "Internal Server Error");
-        res.status(500).json(errorResponse);
-      } else {
-        const successResponse = ApiResponse.success(results);
-        res.json(successResponse);
-      }
+router.get("/", checkToken, (req, res) =>
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      pool.query(
+        "SELECT * FROM orders o JOIN customers c ON o.customer_id = c.customer_id ORDER BY order_date DESC",
+        function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(500, "Internal Server Error");
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
     }
-  );
+  }));
+
+router.get("/orders_by_user", checkToken, (req, res) =>
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      console.log(authorizedData.customer.customer_id);
+      pool.query(
+        "SELECT order_id, order_number, order_date, total_amount FROM orders o JOIN customers c ON o.customer_id = c.customer_id WHERE o.customer_id = ? ORDER BY order_date DESC", [authorizedData.customer.customer_id],
+        function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(500, "Internal Server Error");
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
+    }
+  }));
+
+router.post("/order_items_by_user/", checkToken, (req, res) => {
+  const { body } = req;
+  const { order_id } = body;
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      console.log(order_id);
+      pool.query(
+        "SELECT product_name, quantity, unit_price  FROM order_items o JOIN products p ON o.product_id=p.product_id WHERE o.order_id = ?", [order_id],
+        function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(500, "Internal Server Error");
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
+    }
+  });
 });
 
-router.get("/order_items/", (req, res) => {
-  pool.query(
-    "SELECT * FROM order_items o JOIN products p WHERE o.product_id=p.product_id ORDER BY order_id",
-    function (err, results) {
-      if (err) {
-        console.error(err);
-        const errorResponse = ApiResponse.error(500, "Internal Server Error");
-        res.status(500).json(errorResponse);
-      } else {
-        const successResponse = ApiResponse.success(results);
-        res.json(successResponse);
-      }
+router.get("/order_items/", checkToken, (req, res) => {
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      pool.query(
+        "SELECT * FROM order_items o JOIN products p WHERE o.product_id=p.product_id ORDER BY order_id",
+        function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(500, "Internal Server Error");
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
     }
-  );
+  });
 });
 
-router.get("/order_table_columns/", (req, res) => {
-  pool.query(
-    "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'restaurant_industry' AND TABLE_NAME = 'orders';",
-    function (err, results) {
-      if (err) {
-        console.error(err);
-        const errorResponse = ApiResponse.error(500, "Internal Server Error");
-        res.status(500).json(errorResponse);
-      } else {
-        const successResponse = ApiResponse.success(results);
-        res.json(successResponse);
-      }
+router.get("/order_table_columns/", checkToken, (req, res) => {
+  jwt.verify(req.token, process.env.PRIVATE_KEY, (err, authorizedData) => {
+    if (err) {
+      //If error send Forbidden (403)
+      console.log("ERROR: Could not connect to the protected route");
+      res.sendStatus(403);
+    } else {
+      pool.query(
+        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'restaurant_industry' AND TABLE_NAME = 'orders';",
+        function (err, results) {
+          if (err) {
+            console.error(err);
+            const errorResponse = ApiResponse.error(500, "Internal Server Error");
+            res.status(500).json(errorResponse);
+          } else {
+            const successResponse = ApiResponse.success(results);
+            res.json(successResponse);
+          }
+        }
+      );
     }
-  );
+  });
 });
 
 // Add order
