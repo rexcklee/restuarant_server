@@ -36,7 +36,7 @@ router.post("/login", (req, res) => {
                 jwt.sign(
                   { customer },
                   process.env.PRIVATE_KEY,
-                  { expiresIn: "1h" },
+                  { expiresIn: "180days" },
                   (err, token) => {
                     if (err) {
                       console.log(err);

@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 router.post("/login", (req, res) => {
+  let token_expire_sec = 1800; // in second
   const { body } = req;
   // const { email } = body;
   // const { password } = body;
@@ -38,13 +39,14 @@ router.post("/login", (req, res) => {
                 jwt.sign(
                   { adminUser },
                   process.env.PRIVATE_KEY,
-                  { expiresIn: "1h" },
+                  { expiresIn: token_expire_sec },
                   (err, token) => {
                     if (err) {
                       console.log(err);
                     }
                     const successResponse = ApiResponse.success({
                       token: token,
+                      expire_in: token_expire_sec,
                       currentUser: adminUser,
                     });
                     res.send(successResponse);
