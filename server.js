@@ -22,7 +22,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Path to SSL certificates
-const certPath = "/etc/letsencrypt/live/rexlee.space/";
+const certPath = "/etc/letsencrypt/live/restaurant-server.rexlee.space/";
 
 const options = {
   key: fs.readFileSync(path.join(certPath, "privkey.pem")),
