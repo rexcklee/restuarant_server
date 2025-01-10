@@ -9,6 +9,8 @@ const multer = require("multer");
 const { google } = require("googleapis");
 
 const upload = multer({ dest: "uploads/" });
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
 
 // Google Drive API setup
 const auth = new google.auth.GoogleAuth({

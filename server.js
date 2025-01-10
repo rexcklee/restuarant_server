@@ -23,7 +23,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Path to SSL certificates
-const certPath = "/etc/letsencrypt/live/rexlee.space/";
+const certPath = "/etc/letsencrypt/live/restaurant-server.rexlee.space/";
 
 const options = {
   key: fs.readFileSync(path.join(certPath, "privkey.pem")),
@@ -49,6 +49,7 @@ app.use("/orders", orderRoutes);
 app.use("/news", newsRoutes);
 app.use("/homeSections", homeSectionRoutes);
 app.use("/summary", summaryRoutes);
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 //Create an HTTPS server
 https.createServer(options, app).listen(444, () => {
