@@ -43,7 +43,7 @@ const createOrdersTable = () => {
         order_status VARCHAR(50) NOT NULL,
         shipping_address VARCHAR(255) NOT NULL,
         billing_address VARCHAR(255),
-        payment_method VARCHAR(50) NOT NULL,
+        payment_method VARCHAR(50),
         payment_status VARCHAR(50) NOT NULL,
         comments TEXT,
         FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
