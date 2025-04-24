@@ -132,3 +132,6 @@ dist
 
 # google credentials
 cred.json
+
+# uploads
+uploads/

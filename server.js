@@ -23,7 +23,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Path to SSL certificates
-const certPath = "/etc/letsencrypt/live/restaurant-server.rexlee.space/";
+// const certPath = "/etc/letsencrypt/live/restaurant-server.rexlee.space/";
+const certPath = "/etc/letsencrypt/live/restaurant-server.chikinlee.online/";
 
 const options = {
   key: fs.readFileSync(path.join(certPath, "privkey.pem")),
@@ -52,10 +53,10 @@ app.use("/summary", summaryRoutes);
 app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 //Create an HTTPS server
-https.createServer(options, app).listen(444, () => {
-  console.log("HTTPS server running on port 444");
-});
-
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
+// https.createServer(options, app).listen(444, () => {
+//   console.log("HTTPS server running on port 444");
 // });
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
